@@ -52,7 +52,7 @@ int calculateInfixForm(string infixForm){
     Stack<int> operands;
     for(auto c:infixForm){
         if(isOperand(c)){ //если просто число
-            operands.AddEl((int)c);
+            operands.AddEl((int)c - '0');
         }else if(isOperator(c) && (operators.CurrentLength()==0 or c=='(')){ //если это оператор и длина 0 или это скобка
             operators.AddEl(c);
         }else{ //если это оператор (не открывающаяся скобка) в непустом стеке операторов
@@ -63,10 +63,13 @@ int calculateInfixForm(string infixForm){
                 operators.AddEl(operator2);
             }else if( c != ')' && precedence[operator1]<=precedence[operator2]){ //если это не закрывающаяся скобка и приоритет того что было ниже или такой же
                 //вычислим a oper b
-                int b = operands.TakeEl(b);
-                int a = operands.TakeEl(a);
+                int b;
+                operands.TakeEl(b);
+                int a;
+                operands.TakeEl(a);
 
                 operands.AddEl(doOper(a,c,b));
+                operators.AddEl(c);
 
             }else{ //закрывающаяся скобка выталкивает все до открывающейся скобки
                 //в operator 1 лежит верхушка стека, в 2 - ")"
@@ -74,10 +77,13 @@ int calculateInfixForm(string infixForm){
                     operator2 = operator1;
 
                     //действуем
-                    int b = operands.TakeEl(b);
-                    int a = operands.TakeEl(a);
+                    int b;
+                    operands.TakeEl(b);
+                    int a;
+                    operands.TakeEl(a);
 
                     operands.AddEl(doOper(a,operator2,b));
+
 
                     operators.TakeEl(operator1);
                 }
@@ -88,16 +94,19 @@ int calculateInfixForm(string infixForm){
     while(operators.CurrentLength()>0){
         char oper;
         operators.TakeEl(oper);
-        int b = operands.TakeEl(b);
-        int a = operands.TakeEl(a);
+        int b;
+        operands.TakeEl(b);
+        int a;
+        operands.TakeEl(a);
         operands.AddEl(doOper(a,oper,b));
     }
-    int result = operands.TakeEl(result);
+    int result;
+    operands.TakeEl(result);
     return result;
 
 }
 
 int main() {
-    cout<<calculateInfixForm("2+3");
+    cout<<calculateInfixForm("1+2*(3+4)");
     return 0;
 }
