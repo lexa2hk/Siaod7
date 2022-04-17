@@ -58,7 +58,7 @@ int calculateInfixForm(string infixForm){
         }else{ //если это оператор (не открывающаяся скобка) в непустом стеке операторов
             char operator1,operator2 = c;
             operators.TakeEl(operator1);
-            if(precedence[operator1]>precedence[operator2]){ //если приоритет того что было в стеке выше
+            if(((precedence[operator1]>precedence[operator2]) || operator1=='(')&& operator2!=')'){ //если приоритет того что было в стеке выше
                 operators.AddEl(operator1);
                 operators.AddEl(operator2);
             }else if( c != ')' && precedence[operator1]<=precedence[operator2]){ //если это не закрывающаяся скобка и приоритет того что было ниже или такой же
@@ -68,7 +68,7 @@ int calculateInfixForm(string infixForm){
                 int a;
                 operands.TakeEl(a);
 
-                operands.AddEl(doOper(a,c,b));
+                operands.AddEl(doOper(a,operator1,b));
                 operators.AddEl(c);
 
             }else{ //закрывающаяся скобка выталкивает все до открывающейся скобки
@@ -98,7 +98,25 @@ int calculateInfixForm(string infixForm){
         operands.TakeEl(b);
         int a;
         operands.TakeEl(a);
-        operands.AddEl(doOper(a,oper,b));
+        if(oper==')'){
+            operators.TakeEl(oper);
+            while(oper!='('){
+                operands.AddEl(doOper(a,oper,b));
+                operands.TakeEl(b);
+                operands.TakeEl(a);
+                operators.TakeEl(oper);
+                if(oper=='('){
+                    operators.TakeEl(oper);
+                    operands.AddEl(doOper(a,oper,b));
+                    break;
+                }
+            }
+            char trash;
+            operators.TakeEl(trash);
+
+        }else{
+            operands.AddEl(doOper(a,oper,b));
+        }
     }
     int result;
     operands.TakeEl(result);
@@ -106,7 +124,15 @@ int calculateInfixForm(string infixForm){
 
 }
 
+/*
+ *(int(*)[5])operands.a
+ * test lane
+ * 2+3=5 PASS
+ * 2+1-6/(1+2) = 1 PASS
+ * 1+1*9+(2^4-6^2) = -10 PASS
+ */
+
 int main() {
-    cout<<calculateInfixForm("1+2*(3+4)");
+    cout<<calculateInfixForm("1+1*9+(2^4-6^2)");
     return 0;
 }
