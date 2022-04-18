@@ -3,4 +3,4 @@ project(Siaod7)
 
 set(CMAKE_CXX_STANDARD 23)
 
-add_executable(Siaod7 main.cpp stack.h simpleCharStack.h)
+add_executable(Siaod7 main.cpp stack.h simpleCharStack.h listStack.h)

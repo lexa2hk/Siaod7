@@ -1,7 +1,7 @@
 #include <iostream>
 #include <map>
 #include <string>
-#include "simpleCharStack.h"
+#include "listStack.h"
 #include <cmath>
 using namespace std;
 
@@ -48,8 +48,8 @@ int calculateInfixForm(string infixForm){
     precedence['^'] = 1;
     precedence['('] = -1;
     //precedence[')'] = 0;
-    Stack<char> operators;
-    Stack<int> operands;
+    ListStack<char> operators;
+    ListStack<int> operands;
     for(auto c:infixForm){
         if(isOperand(c)){ //если просто число
             operands.AddEl((int)c - '0');
@@ -130,9 +130,38 @@ int calculateInfixForm(string infixForm){
  * 2+3=5 PASS
  * 2+1-6/(1+2) = 1 PASS
  * 1+1*9+(2^4-6^2) = -10 PASS
+ * 2^2^2 = 16 PASS
  */
 
 int main() {
-    cout<<calculateInfixForm("1+1*9+(2^4-6^2)");
+    system("chcp 65001"); //переключаем кодировку в кириллицу
+    //setlocale(LC_ALL, "Russian");
+    int choice1;
+
+    cout<<"Смольников Алексей. Практическая работа 7. Вариант 20"<<endl<<endl;
+    cout<<"Подсчитать значение инфиксного выражения, реазизуя стек на однонаправленном списке"<<endl;
+    cout<<"1 - ввод выражения, 0 - выход"<<endl;
+
+    do {
+        cin >> choice1;
+
+        if (choice1 != 1 && choice1 != 0) cout << "Некорректный выбор.\n";
+    } while (choice1 != 1 && choice1 != 0);
+
+    string expression;
+    switch (choice1) {
+        case 1:
+            cout<<"Введите выражение: "<<endl;
+            cin.ignore(32767, '\n');
+            getline(cin, expression);
+            cout<<"Результат: "<<calculateInfixForm(expression);
+            break;
+        case 0:
+            cout<<"Завершение программы...";
+            break;
+        default:
+            break;
+
+    }
     return 0;
 }
